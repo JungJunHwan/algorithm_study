@@ -8,8 +8,11 @@ import java.util.*;
 public class BOJ1260 {
     public static int n,m,v;
     public static boolean[][] node;
-    public static boolean[] isVisited;
+    public static boolean[] isVisited_dfs;
+    public static boolean[] isVisited_bfs;
     public static Queue<Integer> dfs_answer;
+    public static Queue<Integer> bfs_answer;
+    public static Queue<Integer> bfs_save;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +22,7 @@ public class BOJ1260 {
         v = Integer.parseInt(st.nextToken());
 
         node = new boolean[n+1][n+1];
-        isVisited = new boolean[n+1];
+        isVisited_dfs = new boolean[n+1];
         dfs_answer = new LinkedList<Integer>();
         int x,y;
 
@@ -30,7 +33,9 @@ public class BOJ1260 {
             node[x][y] = true;
             node[y][x] = true;
         }
+
         dfs(v);
+
         int size = dfs_answer.size();
         for (int i = 0; i < size; i++) {
             System.out.print(dfs_answer.poll());
@@ -38,14 +43,32 @@ public class BOJ1260 {
                 System.out.print(" ");
             }
         }
+
+        System.out.print("\n");
+
     }
 
     public static void dfs(int v){
-        isVisited[v] = true;
+        isVisited_dfs[v] = true;
         dfs_answer.add(v);
         for (int i = 1; i <= n; i++) {
-            if(node[v][i] && !isVisited[i]){
+            if(node[v][i] && !isVisited_dfs[i]){
                 dfs(i);
+            }
+        }
+    }
+
+    public static void bfs(int v){
+        bfs_answer.add(v);
+        isVisited_bfs[v] = true;
+
+        while(!bfs_answer.isEmpty()){
+            v = bfs_answer.poll();
+            bfs_save.add(v);
+            for (int i = 1; i <= n; i++) {
+                if(node[v][i] && isVisited_bfs[i]){
+
+                }
             }
         }
     }
