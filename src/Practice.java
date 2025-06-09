@@ -3,59 +3,45 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-//git test
 public class Practice {
-    static boolean[][] isVisited;
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, 1, 0, -1};
-    static int[][] map;
-    static int n;
-
+    static int node;
+    static boolean[] virus;
+    static boolean[][] connected;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        map = new int[n][n];
+        node = Integer.parseInt(br.readLine())+1;
+        int line = Integer.parseInt(br.readLine());
 
+        connected = new boolean[node][node];
+        virus = new boolean[node];
+        virus[1] = true;
 
-        int maxHeight = 0;
-        for (int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < n; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-                if(map[i][j] > maxHeight) maxHeight = map[i][j];
-            }
+        StringTokenizer st;
+        int a, b;
+        for (int i = 0; i < line; i++) {
+            st = new StringTokenizer(br.readLine());
+            a = Integer.parseInt(st.nextToken());
+            b = Integer.parseInt(st.nextToken());
+
+            connected[a][b] = true;
+            connected[b][a] = true;
         }
 
-        int answer = 0;
-        for (int height = 0; height < maxHeight + 1; height++) {
-            isVisited = new boolean[n][n];
-            int count = 0;
+        dfs(1);
 
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if(!isVisited[i][j] && map[i][j] > height){
-                        count += dfs(i, j, height);
-                    }
-                }
-            }
-            if(count > answer) answer = count;
+        int sum = 0;
+        for (int i = 2; i < node; i++) {
+            if(virus[i]) sum++;
         }
-        System.out.println(answer);
+        System.out.println(sum);
     }
 
-    static int dfs(int x, int y, int height){
-        isVisited[x][y] = true;
-
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-
-            if(nx < 0 || ny < 0 || nx > n-1 || ny > n-1) continue;
-            if(!isVisited[nx][ny] && map[nx][ny] > height){
-                dfs(nx, ny, height);
+    public static void dfs(int i) {
+        for (int k = 1; k < node; k++) {
+            if(connected[i][k] && !virus[k]) {
+                virus[k] = true;
+                dfs(k);
             }
         }
-
-        return 1;
     }
 }
